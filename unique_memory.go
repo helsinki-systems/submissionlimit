@@ -5,14 +5,14 @@ import (
 	"sync"
 )
 
-type UniqueMemoryStorage struct {
+type uniqueMemoryStorage struct {
 	store   map[string]map[string]struct{}
 	storeMu sync.Mutex
 }
 
-var _ UniqueStorage = (*UniqueMemoryStorage)(nil)
+var _ UniqueStorage = (*uniqueMemoryStorage)(nil)
 
-func (ums *UniqueMemoryStorage) Store(k, v string) error {
+func (ums *uniqueMemoryStorage) Store(k, v string) error {
 	ums.storeMu.Lock()
 	defer ums.storeMu.Unlock()
 
@@ -31,8 +31,8 @@ func (ums *UniqueMemoryStorage) Store(k, v string) error {
 	return nil
 }
 
-func NewUniqueMemoryStorage() *UniqueMemoryStorage {
-	return &UniqueMemoryStorage{
+func NewUniqueMemoryStorage() *uniqueMemoryStorage {
+	return &uniqueMemoryStorage{
 		store: make(map[string]map[string]struct{}),
 	}
 }

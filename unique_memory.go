@@ -10,7 +10,7 @@ type UniqueMemoryStorage struct {
 	storeMu sync.Mutex
 }
 
-var _ uniqueStorage = (*UniqueMemoryStorage)(nil)
+var _ UniqueStorage = (*UniqueMemoryStorage)(nil)
 
 func (ums *UniqueMemoryStorage) Store(k, v string) error {
 	ums.storeMu.Lock()

@@ -1,14 +1,14 @@
 package submissionlimit
 
 type UniqueConfig struct {
-	Storage uniqueStorage
+	Storage UniqueStorage
 }
 
 type uniqueLimiter struct {
-	storage uniqueStorage
+	storage UniqueStorage
 }
 
-type uniqueStorage interface {
+type UniqueStorage interface {
 	Store(k, v string) error
 }
 

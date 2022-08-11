@@ -6,7 +6,7 @@ import (
 )
 
 type UniqueMemoryStorage struct {
-	store   map[string][]string
+	store   map[string]map[string]struct{}
 	storeMu sync.Mutex
 }
 
@@ -17,15 +17,15 @@ func (ums *UniqueMemoryStorage) Store(k, v string) error {
 	defer ums.storeMu.Unlock()
 
 	if svs, ok := ums.store[k]; !ok {
-		ums.store[k] = []string{v}
+		s := make(map[string]struct{})
+		s[v] = struct{}{}
+		ums.store[k] = s
 	} else {
-		for _, sv := range svs {
-			if sv == v {
-				return fmt.Errorf("key %q not unique", k)
-			}
+		if _, ok := svs[v]; ok {
+			return fmt.Errorf("key %q not unique", k)
 		}
 
-		ums.store[k] = append(ums.store[k], v)
+		ums.store[k][v] = struct{}{}
 	}
 
 	return nil
@@ -33,6 +33,6 @@ func (ums *UniqueMemoryStorage) Store(k, v string) error {
 
 func NewUniqueMemoryStorage() *UniqueMemoryStorage {
 	return &UniqueMemoryStorage{
-		store: make(map[string][]string),
+		store: make(map[string]map[string]struct{}),
 	}
 }
